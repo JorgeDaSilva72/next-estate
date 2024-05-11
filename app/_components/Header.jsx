@@ -1,15 +1,18 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
+// import { Button } from "@/components/ui/button";
+import { UserButton, useUser } from "@clerk/nextjs";
 import { Plus } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React, { useEffect } from "react";
+import { Button } from "../../components/ui/button";
 
 function Header() {
   const path = usePathname();
-
+  const { user, isSignedIn } = useUser();
+  console.log(user);
   useEffect(() => {
     console.log(path);
   }, []);
@@ -22,7 +25,8 @@ function Header() {
           width={60}
           height={60}
           alt="logo"
-          className="bg-primary rounded-lg"
+          // className="bg-primary rounded-lg"
+          className="rounded-lg"
         />
         <span className="hidden lg:block">Krist Immo</span>
         <Image
@@ -50,12 +54,18 @@ function Header() {
           </li>
         </ul>
       </div>
-      <div className="flex gap-2">
+      <div className="flex gap-2 items-center">
         <Button className="fex gap-2 ">
           <Plus className="h-5 w-5" />
           Créer annonce
         </Button>
-        <Button variant="outline">Se connecter</Button>
+        {isSignedIn ? (
+          <UserButton />
+        ) : (
+          <Link href={"/sign-in"}>
+            <Button variant="outline">Se connecter</Button>
+          </Link>
+        )}
       </div>
     </div>
   );
