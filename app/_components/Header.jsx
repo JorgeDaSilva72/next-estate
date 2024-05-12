@@ -20,14 +20,16 @@ function Header() {
   return (
     <div className="p-6 px-10 flex justify-between items-center shadow-md fixed top-0 w-full z-10 bg-white ">
       <div className="flex gap-10 items-center">
-        <Image
-          src={"/logo.png"}
-          width={60}
-          height={60}
-          alt="logo"
-          // className="bg-primary rounded-lg"
-          className="rounded-lg"
-        />
+        <Link href={"/"}>
+          <Image
+            src={"/logo.png"}
+            width={60}
+            height={60}
+            alt="logo"
+            // className="bg-primary rounded-lg"
+            className="rounded-lg"
+          />
+        </Link>
         <span className="hidden lg:block">Krist Immo</span>
         <Image
           className="hidden lg:block"
@@ -55,10 +57,12 @@ function Header() {
         </ul>
       </div>
       <div className="flex gap-2 items-center">
-        <Button className="fex gap-2 ">
-          <Plus className="h-5 w-5" />
-          Créer annonce
-        </Button>
+        <Link href={"/add-new-listing"}>
+          <Button className="fex gap-2 ">
+            <Plus className="h-5 w-5" />
+            Créer annonce
+          </Button>
+        </Link>
         {isSignedIn ? (
           <UserButton />
         ) : (
