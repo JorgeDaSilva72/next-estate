@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 // import { Label } from "@/components/ui/label";
 // import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "../../../../@/components/ui/label";
@@ -31,6 +31,7 @@ function EditListing({ params }) {
   // const params = usePathname();
   const { user } = useUser();
   const router = useRouter();
+  const [listing, setListing] = useState([]);
 
   useEffect(() => {
     user && verifyUserRecord();
@@ -43,8 +44,18 @@ function EditListing({ params }) {
       .eq("createdBy", user?.primaryEmailAddress.emailAddress)
       .eq("id", params.id);
 
+    if (data) {
+      setListing(data[0]);
+    }
+
     if (data?.length <= 0) {
       router.replace("/");
+    }
+    if (error) {
+      console.log("Erreur lors de la vérification de l'utilisateur", error);
+      // setLoader(false);
+
+      toast("Erreur lors de la vérification de l'utilisateur.");
     }
   };
 
@@ -62,7 +73,7 @@ function EditListing({ params }) {
       toast("Annonce modifiée.");
     }
     if (error) {
-      console.log("error when creating new data", error);
+      console.log("Erreur lors de la modification de l'annonce.", error);
       // setLoader(false);
 
       toast("Erreur lors de la modification de l'annonce.");
@@ -76,15 +87,19 @@ function EditListing({ params }) {
       </h2>
       <Formik
         initialValues={{
-          type: "Rent",
-          propertyType: "",
-          bedroom: "0",
-          bathroom: "0",
-          parking: "0",
-          area: "0",
-          price: "0",
-          hoa: "0",
-          description: "",
+          type: listing?.type ? listing?.type : "Rent",
+          propertyType: listing?.propertyType
+            ? listing?.propertyType
+            : "Appartement",
+          bedroom: listing?.bedroom ? listing?.bedroom : "0",
+          bathroom: listing?.bathroom ? listing?.bathroom : "0",
+          parking: listing?.parking ? listing?.parking : "0",
+          area: listing?.area ? listing?.area : "0",
+          price: listing?.price ? listing?.price : "0",
+          hoa: listing?.hoa ? listing?.hoa : "0",
+          description: listing?.description ? listing?.description : "",
+          profileImage: user?.imageUrl,
+          fullName: user?.fullName,
         }}
         onSubmit={(values) => {
           // console.log(values);
@@ -109,7 +124,7 @@ function EditListing({ params }) {
                     Voulez-vous louer ou vendre votre bien ?
                   </h2>
                   <RadioGroup
-                    defaultValue="Rent"
+                    defaultValue={listing?.type}
                     onValueChange={(v) => (values.type = v)}
                   >
                     <div className="flex items-center space-x-2">
@@ -127,12 +142,19 @@ function EditListing({ params }) {
                     Quel est le type du bien ?
                   </h2>
                   <Select
+                    defaultValue={listing?.propertyType}
                     name="propertyType"
                     onValueChange={(e) => (values.propertyType = e)}
                     required
                   >
                     <SelectTrigger className="w-[180px]">
-                      <SelectValue placeholder="Type" />
+                      <SelectValue
+                        placeholder={
+                          listing?.propertyType
+                            ? listing?.propertyType
+                            : "Type du bien"
+                        }
+                      />
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="Appartement">Appartement</SelectItem>
@@ -148,6 +170,7 @@ function EditListing({ params }) {
                 <div className="grid w-full max-w-sm items-center gap-1.5">
                   <Label htmlFor="bedroom">Chambre</Label>
                   <Input
+                    defaultValue={listing?.bedroom}
                     min={0}
                     type="number"
                     id="bedroom"
@@ -162,6 +185,7 @@ function EditListing({ params }) {
                 <div className="grid w-full max-w-sm items-center gap-1.5">
                   <Label htmlFor="bathroom">Salle de bain</Label>
                   <Input
+                    defaultValue={listing?.bathroom}
                     min={0}
                     type="number"
                     id="bathroom"
@@ -176,6 +200,7 @@ function EditListing({ params }) {
                 <div className="grid w-full max-w-sm items-center gap-1.5">
                   <Label htmlFor="parking">Parking</Label>
                   <Input
+                    defaultValue={listing?.parking}
                     min={0}
                     type="number"
                     id="parking"
@@ -190,6 +215,7 @@ function EditListing({ params }) {
                 <div className="grid w-full max-w-sm items-center gap-1.5">
                   <Label htmlFor="price">Surface en m²</Label>
                   <Input
+                    defaultValue={listing?.area}
                     min={0}
                     type="number"
                     id="area"
@@ -202,6 +228,7 @@ function EditListing({ params }) {
                 <div className="grid w-full max-w-sm items-center gap-1.5">
                   <Label htmlFor="price">Prix de vente en $</Label>
                   <Input
+                    defaultValue={listing?.price}
                     min={0}
                     type="number"
                     id="price"
@@ -216,6 +243,7 @@ function EditListing({ params }) {
                   <div className="grid w-full max-w-sm items-center gap-1.5">
                     <Label htmlFor="hoa">Charges par mois en $</Label>
                     <Input
+                      defaultValue={listing?.hoa}
                       min={0}
                       type="number"
                       id="hoa"
@@ -230,6 +258,7 @@ function EditListing({ params }) {
                 <div className="grid w-full gap-1.5">
                   <Label htmlFor="description">Description</Label>
                   <Textarea
+                    defaultValue={listing?.description}
                     placeholder="Ecrivez votre message ici "
                     id="description"
                     rows="7"
@@ -239,7 +268,8 @@ function EditListing({ params }) {
                   />
                 </div>
               </div>
-              <div className="mt-10 flex gap-7 justify-end">
+
+              <div className="mt-10 flex flex-col gap-7 md:flex-row  md:justify-end ">
                 <Button
                   type="submit"
                   disabled={isSubmitting}

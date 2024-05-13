@@ -6,13 +6,14 @@ import { useUser } from "@clerk/nextjs";
 import { supabase } from "../../../utils/supabase/client";
 import { toast } from "sonner";
 import { Loader } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 function AddNewListing() {
   const [selectedAddress, setSelectedAddress] = useState();
   const [coordinates, setCoordinates] = useState();
   const { user } = useUser();
   const [loader, setLoader] = useState(false);
-
+  const router = useRouter();
   const nextHandler = async () => {
     // console.log(selectedAddress.label, coordinates);
     setLoader(true);
@@ -33,6 +34,7 @@ function AddNewListing() {
       setLoader(false);
 
       toast("Nouvelle annonce créée.");
+      router.replace("/edit-listing/" + data[0].id);
     }
     if (error) {
       // console.log("error when creating new data", error);
