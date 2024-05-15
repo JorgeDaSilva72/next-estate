@@ -26,12 +26,16 @@ import { usePathname, useRouter } from "next/navigation";
 import { supabase } from "../../../../utils/supabase/client";
 import { toast } from "sonner";
 import { useUser } from "@clerk/nextjs";
+import FileUpload from "../_components/FileUpload";
+import { Loader } from "lucide-react";
 
 function EditListing({ params }) {
   // const params = usePathname();
   const { user } = useUser();
   const router = useRouter();
   const [listing, setListing] = useState([]);
+  const [images, setImages] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     user && verifyUserRecord();
@@ -40,11 +44,12 @@ function EditListing({ params }) {
   const verifyUserRecord = async () => {
     const { data, error } = await supabase
       .from("listing")
-      .select("*")
+      .select("*,listingImages(listing_id,url)")
       .eq("createdBy", user?.primaryEmailAddress.emailAddress)
       .eq("id", params.id);
 
     if (data) {
+      console.log("here:", data);
       setListing(data[0]);
     }
 
@@ -60,6 +65,7 @@ function EditListing({ params }) {
   };
 
   const onSubmitHandler = async (formValue) => {
+    setLoading(true);
     const { data, error } = await supabase
       .from("listing")
       .update(formValue)
@@ -72,17 +78,55 @@ function EditListing({ params }) {
 
       toast("Annonce modifiée.");
     }
-    if (error) {
-      console.log("Erreur lors de la modification de l'annonce.", error);
-      // setLoader(false);
+    for (const image of images) {
+      const file = image;
+      const fileName = Date.now().toString();
+      const fileExt = fileName.split(".").pop();
+      const { data, error } = await supabase.storage
+        .from("listingImages")
+        .upload(`${fileName}`, file, {
+          contentType: `image/${fileExt}`,
+          upsert: false,
+        });
+      if (error) {
+        console.log("Erreur lors de l'upload des images.", error);
+        setLoading(false);
 
-      toast("Erreur lors de la modification de l'annonce.");
+        toast("Erreur lors de l'upload des images.");
+      } else {
+        // console.log(data);
+        const imageUrl = process.env.NEXT_PUBLIC_IMAGE_URL + fileName;
+        // console.log(imageUrl);
+        const { data, error } = await supabase
+          .from("listingImages")
+          .insert([{ url: imageUrl, listing_id: params?.id }])
+          .select();
+
+        if (error) {
+          setLoading(false);
+        }
+
+        if (data) {
+          // console.log("data uptaded", data);
+          // setLoader(false);
+
+          toast("Annonce modifiée.");
+        }
+      }
+      setLoading(false);
     }
+
+    // if (error) {
+    //   console.log("Erreur lors de la modification de l'annonce.", error);
+    //   // setLoader(false);
+
+    //   toast("Erreur lors de la modification de l'annonce.");
+    // }
   };
 
   return (
     <div className="px-10 md:px-36 ">
-      <h2 className="font-bolt text-2xl">
+      <h2 className="font-bolt text-2xl text-center">
         Donnez plus d'informations sur votre bien :
       </h2>
       <Formik
@@ -268,6 +312,15 @@ function EditListing({ params }) {
                   />
                 </div>
               </div>
+              <div className="">
+                <h2 className="font-bolt text-2xl my-2 text-center">
+                  Déposez les photos de votre bien.
+                </h2>
+                <FileUpload
+                  setImages={(value) => setImages(value)}
+                  imageList={listing.listingImages}
+                />
+              </div>
 
               <div className="mt-10 flex flex-col gap-7 md:flex-row  md:justify-end ">
                 <Button
@@ -278,8 +331,13 @@ function EditListing({ params }) {
                 >
                   Sauvegarder
                 </Button>
-                <Button type="submit" disabled={isSubmitting}>
-                  Sauvegarder & Publier
+                {/* <Button type="submit" disabled={isSubmitting}> */}
+                <Button disabled={loading}>
+                  {loading ? (
+                    <Loader className="animate-spin" />
+                  ) : (
+                    "Sauvegarder & Publier"
+                  )}
                 </Button>
               </div>
             </div>
