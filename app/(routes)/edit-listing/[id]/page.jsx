@@ -20,6 +20,19 @@ import {
 import { Input } from "../../../../@/components/ui/input";
 
 import { Textarea } from "../../../../@/components/ui/textarea";
+
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "../../../../@/components/ui/alert-dialog";
+
 import { Formik } from "formik";
 import { Button } from "../../../../components/ui/button";
 import { usePathname, useRouter } from "next/navigation";
@@ -49,17 +62,19 @@ function EditListing({ params }) {
       .eq("id", params.id);
 
     if (data) {
-      console.log("here:", data);
+      // console.log("here:", data);
       setListing(data[0]);
+      setLoading(false);
     }
 
     if (data?.length <= 0) {
+      setLoading(false);
       router.replace("/");
     }
     if (error) {
       console.log("Erreur lors de la vérification de l'utilisateur", error);
       // setLoader(false);
-
+      setLoading(false);
       toast("Erreur lors de la vérification de l'utilisateur.");
     }
   };
@@ -69,13 +84,13 @@ function EditListing({ params }) {
     const { data, error } = await supabase
       .from("listing")
       .update(formValue)
-      .eq("id", params.id)
+      .eq("id", params?.id)
       .select();
 
     if (data) {
       // console.log("data uptaded", data);
       // setLoader(false);
-
+      setLoading(false);
       toast("Annonce modifiée.");
     }
     for (const image of images) {
@@ -111,6 +126,7 @@ function EditListing({ params }) {
           // setLoader(false);
 
           toast("Annonce modifiée.");
+          setLoading(false);
         }
       }
       setLoading(false);
@@ -122,6 +138,21 @@ function EditListing({ params }) {
 
     //   toast("Erreur lors de la modification de l'annonce.");
     // }
+  };
+
+  const publishBtnHandler = async () => {
+    setLoading(true);
+    onSubmitHandler();
+    const { data, error } = await supabase
+      .from("listing")
+      .update({ active: true })
+      .eq("id", params?.id)
+      .select();
+
+    if (data) {
+      setLoading(false);
+      toast("Annonce publiée.");
+    }
   };
 
   return (
@@ -144,9 +175,10 @@ function EditListing({ params }) {
           description: listing?.description ? listing?.description : "",
           profileImage: user?.imageUrl,
           fullName: user?.fullName,
+          active: listing?.active ? listing?.active : false,
         }}
         onSubmit={(values) => {
-          // console.log(values);
+          console.log(values);
           onSubmitHandler(values);
         }}
       >
@@ -325,14 +357,19 @@ function EditListing({ params }) {
               <div className="mt-10 flex flex-col gap-7 md:flex-row  md:justify-end ">
                 <Button
                   type="submit"
-                  disabled={isSubmitting}
+                  // disabled={isSubmitting}
+                  disabled={loading}
                   variant="outline"
                   className="text-primary border-primary"
                 >
                   Sauvegarder
                 </Button>
-                {/* <Button type="submit" disabled={isSubmitting}> */}
-                <Button disabled={loading}>
+
+                <Button
+                  type="submit"
+                  disabled={loading}
+                  // onClick={() => publishBtnHandler()}
+                >
                   {loading ? (
                     <Loader className="animate-spin" />
                   ) : (
