@@ -1,4 +1,4 @@
-/** @type {import('tailwindcss').Config} */
+/** @type {import('tai2smlwindcss').Config} */
 module.exports = {
   darkMode: ["class"],
   content: [
@@ -17,6 +17,9 @@ module.exports = {
       },
     },
     extend: {
+      screens: {
+        "2sm": "442px",
+      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",

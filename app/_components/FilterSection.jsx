@@ -16,7 +16,7 @@ function FilterSection({
   setHomeType,
 }) {
   return (
-    <div className="px-3 py-2 grid grid-cols-2 md:flex gap-2">
+    <div className="px-3 py-2 grid grid-cols-1 2sm:grid-cols-2 2sm:gap-2  sm:grid-cols-2 sm:gap-2 md:grid-cols-2 md:gap-4">
       <Select onValueChange={setBedcount}>
         <SelectTrigger className="w-[180px]">
           <SelectValue placeholder="Lits" />

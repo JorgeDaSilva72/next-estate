@@ -3,6 +3,8 @@
 import React, { useEffect, useState } from "react";
 
 import Listing from "./Listing";
+import GoogleMapSection from "./GoogleMapSection";
+
 import { supabase } from "../../utils/supabase/client";
 
 function ListingMapView({ type }) {
@@ -12,6 +14,7 @@ function ListingMapView({ type }) {
   const [bathCount, setBathCount] = useState(0);
   const [parkingCount, setParkingCount] = useState(0);
   const [homeType, setHomeType] = useState();
+  const [coordinates, setCoordinates] = useState();
 
   useEffect(() => {
     getLatestListing();
@@ -68,8 +71,8 @@ function ListingMapView({ type }) {
   };
 
   return (
-    <div className="p-10">
-      <div className="grid grid-cols-1 md:grid-cols-2">
+    <div className="p-10 gap-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 ">
         <div className="">
           <Listing
             listing={listing}
@@ -79,9 +82,12 @@ function ListingMapView({ type }) {
             setBathcount={setBathCount}
             setParkingcount={setParkingCount}
             setHomeType={setHomeType}
+            setCoordinates={setCoordinates}
           />
         </div>
-        <div className="">Map</div>
+        {/* <div className="fixed right-10 h-full md:w-[350px] lg:w-[450px] xl:w-[650px]">
+          <GoogleMapSection coordinates={coordinates} />
+        </div> */}
       </div>
     </div>
   );
