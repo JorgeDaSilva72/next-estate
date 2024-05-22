@@ -2,7 +2,7 @@
 
 // import { Button } from "@/components/ui/button";
 import { UserButton, useUser } from "@clerk/nextjs";
-import { Plus } from "lucide-react";
+import { LogIn, Plus } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -18,16 +18,16 @@ function Header() {
   }, []);
 
   return (
-    <div className="p-6 px-10 flex justify-between items-center shadow-md fixed top-0 w-full  bg-white z-50 ">
-      <div className="flex gap-10 items-center">
+    <div className="flex p-6 px-10 flex justify-between items-center shadow-md fixed top-0 w-full  bg-white z-50 ">
+      <div className="flex  gap-10 items-center">
         <Link href={"/"}>
           <Image
             src={"/logo.png"}
-            width={60}
-            height={60}
+            width={50}
+            height={50}
             alt="logo"
             // className="bg-primary rounded-lg"
-            className="hidden 2sm:block rounded-lg"
+            className="rounded-lg"
           />
         </Link>
         <span className="hidden lg:block">Krist Immo</span>
@@ -58,16 +58,19 @@ function Header() {
       </div>
       <div className="flex gap-2 items-center">
         <Link href={"/add-new-listing"}>
-          <Button className="fex gap-2 ">
-            <Plus className="h-5 w-5" />
-            Créer annonce
+          <Button className="flex gap-1  ">
+            <Plus className="2sm:hidden h-5 w-5" />
+            <p className="hidden 2sm:block">Créer annonce</p>
           </Button>
         </Link>
         {isSignedIn ? (
           <UserButton />
         ) : (
           <Link href={"/sign-in"}>
-            <Button variant="outline">Se connecter</Button>
+            <Button variant="outline" className="flex gap-1  ">
+              <LogIn className="2sm:hidden h-5 w-5" />
+              <p className="hidden 2sm:block">Se connecter</p>
+            </Button>
           </Link>
         )}
       </div>
