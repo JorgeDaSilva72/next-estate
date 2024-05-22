@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import { supabase } from "../../../../utils/supabase/client";
 import { toast } from "sonner";
 import Slider from "../_components/Slider";
+import Details from "../_components/Details";
 
 const ViewListing = ({ params }) => {
   const [listingDetail, setListingDetail] = useState();
@@ -41,6 +42,7 @@ const ViewListing = ({ params }) => {
   return (
     <div className="px-4 md:px-32 lg:px-56 my-3">
       <Slider images={listingDetail?.listingImages} />
+      <Details listingDetail={listingDetail} />
     </div>
   );
 };

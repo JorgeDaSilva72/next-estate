@@ -41,6 +41,7 @@ function GoogleMapSection({ coordinates }) {
         zoom={10}
         onLoad={onLoad}
         onUnmount={onUnmount}
+        gestureHandling="greedy"
       >
         {/* Child components, such as markers, info windows, etc. */}
         <></>

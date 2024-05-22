@@ -24,55 +24,63 @@ export default function Slider({ images }) {
   };
 
   return (
-    <div className="relative">
-      <AiOutlineLeft
-        onClick={handlePrevSlide}
-        className="absolute left-0 m-auto text-5xl inset-y-1/2 cursor-pointer text-gray-400 z-20"
-      />
-      <div className="w-full h-[50vh] flex overflow-hidden relative m-auto">
-        <Swipe
-          onSwipeLeft={handleNextSlide}
-          onSwipeRight={handlePrevSlide}
-          className="relative z-10 w-full h-full"
-        >
-          {images?.map((image, index) => {
-            if (index === currentSlide) {
+    <>
+      {images ? (
+        <div className="relative">
+          <AiOutlineLeft
+            onClick={handlePrevSlide}
+            className="absolute left-0 m-auto text-5xl inset-y-1/2 cursor-pointer text-gray-400 z-20"
+          />
+          <div className="w-full h-[50vh] flex overflow-hidden relative m-auto">
+            <Swipe
+              onSwipeLeft={handleNextSlide}
+              onSwipeRight={handlePrevSlide}
+              className="relative z-10 w-full h-full"
+            >
+              {images?.map((image, index) => {
+                if (index === currentSlide) {
+                  return (
+                    <Image
+                      key={image?.id}
+                      src={image?.url}
+                      alt="image"
+                      width={1280}
+                      height={450}
+                      className="rounded-xl object-cover animate-fadeIn h-[450px] "
+                    />
+                  );
+                }
+              })}
+            </Swipe>
+          </div>
+          <AiOutlineRight
+            onClick={handleNextSlide}
+            className="absolute right-0 m-auto text-5xl inset-y-1/2 cursor-pointer text-gray-400 z-20"
+          />
+
+          <div className="relative flex justify-center p-2">
+            {images?.map((_, index) => {
               return (
-                <Image
-                  key={image?.id}
-                  src={image?.url}
-                  alt="image"
-                  width={1280}
-                  height={450}
-                  className="rounded-xl object-cover animate-fadeIn h-[450px] "
+                <div
+                  className={
+                    index === currentSlide
+                      ? "h-4 w-4 bg-gray-700 rounded-full mx-2 mb-2 cursor-pointer"
+                      : "h-4 w-4 bg-gray-300 rounded-full mx-2 mb-2 cursor-pointer"
+                  }
+                  key={index}
+                  onClick={() => {
+                    setCurrentSlide(index);
+                  }}
                 />
               );
-            }
-          })}
-        </Swipe>
-      </div>
-      <AiOutlineRight
-        onClick={handleNextSlide}
-        className="absolute right-0 m-auto text-5xl inset-y-1/2 cursor-pointer text-gray-400 z-20"
-      />
-
-      <div className="relative flex justify-center p-2">
-        {images?.map((_, index) => {
-          return (
-            <div
-              className={
-                index === currentSlide
-                  ? "h-4 w-4 bg-gray-700 rounded-full mx-2 mb-2 cursor-pointer"
-                  : "h-4 w-4 bg-gray-300 rounded-full mx-2 mb-2 cursor-pointer"
-              }
-              key={index}
-              onClick={() => {
-                setCurrentSlide(index);
-              }}
-            />
-          );
-        })}
-      </div>
-    </div>
+            })}
+          </div>
+        </div>
+      ) : (
+        <div className="w-full h-[450px] bg-slate-200 animate pulse rounded-lg">
+          En chargement...
+        </div>
+      )}
+    </>
   );
 }

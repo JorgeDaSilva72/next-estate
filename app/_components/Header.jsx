@@ -18,7 +18,7 @@ function Header() {
   }, []);
 
   return (
-    <div className="p-6 px-10 flex justify-between items-center shadow-md fixed top-0 w-full z-10 bg-white ">
+    <div className="p-6 px-10 flex justify-between items-center shadow-md fixed top-0 w-full  bg-white z-50 ">
       <div className="flex gap-10 items-center">
         <Link href={"/"}>
           <Image
@@ -27,7 +27,7 @@ function Header() {
             height={60}
             alt="logo"
             // className="bg-primary rounded-lg"
-            className="rounded-lg"
+            className="hidden 2sm:block rounded-lg"
           />
         </Link>
         <span className="hidden lg:block">Krist Immo</span>

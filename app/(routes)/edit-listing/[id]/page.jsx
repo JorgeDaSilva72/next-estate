@@ -175,7 +175,7 @@ function EditListing({ params }) {
           description: listing?.description ? listing?.description : "",
           profileImage: user?.imageUrl,
           fullName: user?.fullName,
-          active: listing?.active ? listing?.active : false,
+          active: listing?.active ? listing?.active : true,
         }}
         onSubmit={(values) => {
           console.log(values);
