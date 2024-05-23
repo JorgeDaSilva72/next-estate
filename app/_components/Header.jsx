@@ -18,7 +18,7 @@ function Header() {
   }, []);
 
   return (
-    <div className="flex p-6 px-10 flex justify-between items-center shadow-md fixed top-0 w-full  bg-white z-50 ">
+    <div className="flex p-6 px-10 justify-between items-center shadow-md fixed top-0 w-full  bg-white z-50 ">
       <div className="flex  gap-10 items-center">
         <Link href={"/"}>
           <Image
@@ -39,18 +39,26 @@ function Header() {
           alt="cameroon flag"
         />
         <ul className="hidden md:flex gap-10">
+          <Link href={"/rent"}>
+            <li
+              className={`hover:text-primary font-medium text-sm cursor-pointer ${
+                path == "/rent" ? "text-primary" : ""
+              }`}
+            >
+              Louer
+            </li>
+          </Link>
+
           <Link href={"/"}>
             <li
               className={`hover:text-primary font-medium text-sm cursor-pointer ${
                 path == "/" ? "text-primary" : ""
               }`}
             >
-              A Louer
+              Acheter
             </li>
           </Link>
-          <li className="hover:text-primary font-medium text-sm cursor-pointer">
-            A Vendre
-          </li>
+
           <li className="hover:text-primary font-medium text-sm cursor-pointer">
             Agents
           </li>
