@@ -1,13 +1,22 @@
 "use client";
 
 // import { Button } from "@/components/ui/button";
-import { UserButton, useUser } from "@clerk/nextjs";
+import { SignOutButton, UserButton, useUser } from "@clerk/nextjs";
 import { LogIn, Plus } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React, { useEffect } from "react";
 import { Button } from "../../components/ui/button";
+
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "../../@/components/ui/dropdown-menu";
 
 function Header() {
   const path = usePathname();
@@ -72,7 +81,32 @@ function Header() {
           </Button>
         </Link>
         {isSignedIn ? (
-          <UserButton />
+          // <UserButton />
+
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Image
+                src={user?.imageUrl}
+                width={35}
+                height={35}
+                alt="user profile"
+                className="rounded-full"
+              />
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+              <DropdownMenuLabel>Mon compte</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem>
+                <Link href={"/user"}>Mon profil </Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem>
+                <Link href={"/user/my-listing"}>Mes annonces </Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem>
+                <SignOutButton>Se déconnecter </SignOutButton>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         ) : (
           <Link href={"/sign-in"}>
             <Button variant="outline" className="flex gap-1  ">
