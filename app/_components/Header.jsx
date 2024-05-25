@@ -2,7 +2,7 @@
 
 // import { Button } from "@/components/ui/button";
 import { SignOutButton, UserButton, useUser } from "@clerk/nextjs";
-import { LogIn, Plus } from "lucide-react";
+import { Plus, PlusCircle, User } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -32,16 +32,64 @@ function Header() {
     <div className="h-20 px-4 md:px-8 lg:px-16 xl:px-32 2xl:px-64 relative">
       {/* MOBILE */}
       <div className="h-full flex items-center justify-between md:hidden">
-        <Link href="/">
-          <Image
-            src={"/logo.png"}
-            width={50}
-            height={50}
-            alt="logo"
-            className="rounded-lg"
-          />
-        </Link>
-        <Menu />
+        {/* MOBILE LEFT*/}
+        <div className="">
+          <Link href="/">
+            <Image
+              src={"/logo.png"}
+              width={50}
+              height={50}
+              alt="logo"
+              className="rounded-lg"
+            />
+          </Link>
+        </div>
+        {/* MOBILE RIGHT*/}
+        <div className="flex items-center justify-between gap-4">
+          {isSignedIn ? (
+            <Link href={"/add-new-listing"}>
+              <Plus />
+            </Link>
+          ) : (
+            ""
+          )}
+
+          {isSignedIn ? (
+            // <UserButton />
+
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Image
+                  src={user?.imageUrl}
+                  width={35}
+                  height={35}
+                  alt="user profile"
+                  className="rounded-full"
+                />
+              </DropdownMenuTrigger>
+              <DropdownMenuContent>
+                <DropdownMenuLabel>Mon compte</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem>
+                  <Link href={"/user"}>Mon profil </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                  <Link href={"/user/my-listing"}>Mes annonces </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                  <SignOutButton>Se déconnecter </SignOutButton>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          ) : (
+            <Link href={"/sign-in"}>
+              <Button variant="outline" className="flex gap-1  ">
+                <User className=" h-5 w-5" />
+              </Button>
+            </Link>
+          )}
+          <Menu className="" />
+        </div>
       </div>
       {/* BIGGER SCREENS */}
       <div className="hidden md:flex items-center justify-between gap-8 h-full">
@@ -121,8 +169,8 @@ function Header() {
           ) : (
             <Link href={"/sign-in"}>
               <Button variant="outline" className="flex gap-1  ">
-                <LogIn className="2sm:hidden h-5 w-5" />
-                <p className="hidden 2sm:block">Se connecter</p>
+                <User className=" h-5 w-5" />
+                <p className="">Se connecter</p>
               </Button>
             </Link>
           )}
