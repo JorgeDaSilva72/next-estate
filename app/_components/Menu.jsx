@@ -60,10 +60,7 @@ const Menu = () => {
             </>
           ) : (
             <Link href={"/sign-in"}>
-              <p
-                className="hidden 2sm:block "
-                onClick={() => setOpen((prev) => !prev)}
-              >
+              <p className="" onClick={() => setOpen((prev) => !prev)}>
                 Se connecter
               </p>
             </Link>

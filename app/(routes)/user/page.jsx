@@ -7,7 +7,7 @@ import React from "react";
 function User() {
   return (
     <div className="my-6 md:px-10 lg:px-32">
-      <h2 className="font-bold text-2xl text-center py-3">Mon profil :</h2>
+      <h2 className="font-bold text-2xl text-center py-3">MON PROFIL</h2>
       <UserProfile>
         <UserButton.UserProfilePage
           label="Mes annonces"

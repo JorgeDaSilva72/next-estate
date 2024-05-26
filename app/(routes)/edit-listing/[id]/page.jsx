@@ -21,6 +21,8 @@ import { Input } from "../../../../@/components/ui/input";
 
 import { Textarea } from "../../../../@/components/ui/textarea";
 
+import { Checkbox } from "../../../../@/components/ui/checkbox";
+
 import {
   AlertDialog,
   AlertDialogAction,
@@ -62,7 +64,7 @@ function EditListing({ params }) {
       .eq("id", params.id);
 
     if (data) {
-      // console.log("here:", data);
+      // console.log("data:", data);
       setListing(data[0]);
       setLoading(false);
     }
@@ -88,10 +90,11 @@ function EditListing({ params }) {
       .select();
 
     if (data) {
-      // console.log("data uptaded", data);
+      console.log("data updated", data);
       // setLoader(false);
       setLoading(false);
       toast("Annonce modifiée.");
+      location.reload();
     }
     for (const image of images) {
       const file = image;
@@ -140,45 +143,51 @@ function EditListing({ params }) {
     // }
   };
 
-  const publishBtnHandler = async () => {
-    setLoading(true);
-    onSubmitHandler();
-    const { data, error } = await supabase
-      .from("listing")
-      .update({ active: true })
-      .eq("id", params?.id)
-      .select();
+  // const publishBtnHandler = async () => {
+  //   setLoading(true);
+  //   onSubmitHandler();
+  //   const { data, error } = await supabase
+  //     .from("listing")
+  //     .update({ active: true })
+  //     .eq("id", params?.id)
+  //     .select();
 
-    if (data) {
-      setLoading(false);
-      toast("Annonce publiée.");
-    }
-  };
+  //   if (data) {
+  //     setLoading(false);
+  //     toast("Annonce publiée.");
+  //   }
+
+  //   if (error) {
+  //     setLoading(false);
+  //     console.log("Erreur lors de la publication de l'annonce.", error);
+  //     toast("Erreur lors de la publication de l'annonce.");
+  //   }
+  // };
 
   return (
     <div className="px-10 md:px-36 ">
       <h2 className="font-bolt text-2xl text-center">
-        Donnez plus d'informations sur votre bien :
+        Donnez plus d'informations sur votre bien situé à l'adresse :
       </h2>
+      <h2 className="font-bolt text-3xl text-center">{listing?.address}</h2>
       <Formik
+        enableReinitialize={true}
         initialValues={{
-          type: listing?.type ? listing?.type : "Rent",
-          propertyType: listing?.propertyType
-            ? listing?.propertyType
-            : "Appartement",
-          bedroom: listing?.bedroom ? listing?.bedroom : "0",
-          bathroom: listing?.bathroom ? listing?.bathroom : "0",
-          parking: listing?.parking ? listing?.parking : "0",
-          area: listing?.area ? listing?.area : "0",
-          price: listing?.price ? listing?.price : "0",
-          hoa: listing?.hoa ? listing?.hoa : "0",
-          description: listing?.description ? listing?.description : "",
+          type: listing?.type || "Rent",
+          propertyType: listing?.propertyType || "Appartement",
+          bedroom: listing?.bedroom || 0,
+          bathroom: listing?.bathroom || 0,
+          parking: listing?.parking || 0,
+          area: listing?.area || 0,
+          price: listing?.price || 0,
+          hoa: listing?.hoa || 0,
+          description: listing?.description || "",
           profileImage: user?.imageUrl,
           fullName: user?.fullName,
-          active: listing?.active ? listing?.active : true,
+          active: listing?.active,
         }}
         onSubmit={(values) => {
-          console.log(values);
+          console.log("values:", values);
           onSubmitHandler(values);
         }}
       >
@@ -194,14 +203,17 @@ function EditListing({ params }) {
         }) => (
           <form onSubmit={handleSubmit}>
             <div className="p-8 rounded-lg shadow-xl">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
                 <div className="flex flex-col gap-2">
                   <h2 className="text-lg text-slate-500">
                     Voulez-vous louer ou vendre votre bien ?
                   </h2>
                   <RadioGroup
-                    defaultValue={listing?.type}
+                    // defaultValue={listing?.type}
+
+                    value={values?.type}
                     onValueChange={(v) => (values.type = v)}
+                    // onBlur={handleBlur}
                   >
                     <div className="flex items-center space-x-2">
                       <RadioGroupItem value="Rent" id="Rent" />
@@ -218,18 +230,20 @@ function EditListing({ params }) {
                     Quel est le type du bien ?
                   </h2>
                   <Select
-                    defaultValue={listing?.propertyType}
-                    name="propertyType"
+                    // defaultValue={listing?.propertyType}
+                    // defaultValue={values?.propertyType}
                     onValueChange={(e) => (values.propertyType = e)}
-                    required
+                    value={values?.propertyType}
+                    name="propertyType"
+                    // onBlur={handleBlur}
                   >
                     <SelectTrigger className="w-[180px]">
                       <SelectValue
-                        placeholder={
-                          listing?.propertyType
-                            ? listing?.propertyType
-                            : "Type du bien"
-                        }
+                      // placeholder={
+                      //   values?.propertyType
+                      //     ? values?.propertyType
+                      //     : "Type du bien"
+                      // }
                       />
                     </SelectTrigger>
                     <SelectContent>
@@ -239,6 +253,32 @@ function EditListing({ params }) {
                     </SelectContent>
                   </Select>
                 </div>
+                {/* <div className="flex items-center space-x-2">
+                  <Checkbox
+                    // defaultValue={listing?.active}
+                    id="active"
+                    name="active"
+                    checked={values.active}
+                    // checked={listing?.active}
+                    // onCheckedChange={(e) => (values.active = e)}
+                    onCheckedChange={(e) => console.log(e)}
+
+                    // onBlur={handleBlur}
+                  />
+                  <label
+                    htmlFor="active"
+                    className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                  >
+                    Publier
+                  </label>
+                </div> */}
+                {/* <div className="mt-12">
+                  {values.active == true ? (
+                    <p className="text-green-500">Publié</p>
+                  ) : (
+                    <p className="text-red-500">Non publié</p>
+                  )}
+                </div> */}
               </div>
               <div className="mt-20 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 ">
                 {/* <div className="flex flex-col gap-2"> */}
@@ -253,6 +293,9 @@ function EditListing({ params }) {
                     name="bedroom"
                     placeholder="Chambres"
                     onChange={handleChange}
+                    // value={values.bedroom || listing?.bedroom || 0}
+                    value={values.bedroom}
+                    onBlur={handleBlur}
                   />
                 </div>
                 {/* </div> */}
@@ -261,13 +304,15 @@ function EditListing({ params }) {
                 <div className="grid w-full max-w-sm items-center gap-1.5">
                   <Label htmlFor="bathroom">Salle de bain</Label>
                   <Input
-                    defaultValue={listing?.bathroom}
                     min={0}
+                    // defaultValue={listing?.bathroom}
                     type="number"
                     id="bathroom"
                     name="bathroom"
                     placeholder="Salle de bain"
                     onChange={handleChange}
+                    value={values.bathroom}
+                    onBlur={handleBlur}
                   />
                 </div>
                 {/* </div> */}
@@ -276,13 +321,15 @@ function EditListing({ params }) {
                 <div className="grid w-full max-w-sm items-center gap-1.5">
                   <Label htmlFor="parking">Parking</Label>
                   <Input
-                    defaultValue={listing?.parking}
+                    // defaultValue={listing?.parking}
                     min={0}
                     type="number"
                     id="parking"
                     name="parking"
                     placeholder="Parking"
                     onChange={handleChange}
+                    value={values.parking}
+                    onBlur={handleBlur}
                   />
                 </div>
               </div>
@@ -291,27 +338,29 @@ function EditListing({ params }) {
                 <div className="grid w-full max-w-sm items-center gap-1.5">
                   <Label htmlFor="price">Surface en m²</Label>
                   <Input
-                    defaultValue={listing?.area}
+                    // defaultValue={listing?.area}
                     min={0}
                     type="number"
                     id="area"
                     name="area"
                     placeholder="Surface en m²"
                     onChange={handleChange}
-                    required
+                    value={values.area}
+                    onBlur={handleBlur}
                   />
                 </div>
                 <div className="grid w-full max-w-sm items-center gap-1.5">
                   <Label htmlFor="price">Prix de vente en $</Label>
                   <Input
-                    defaultValue={listing?.price}
+                    // defaultValue={listing?.price}
                     min={0}
                     type="number"
                     id="price"
                     name="price"
                     placeholder="Prix de vente en $"
                     onChange={handleChange}
-                    required
+                    value={values.price}
+                    onBlur={handleBlur}
                   />
                 </div>
 
@@ -319,13 +368,15 @@ function EditListing({ params }) {
                   <div className="grid w-full max-w-sm items-center gap-1.5">
                     <Label htmlFor="hoa">Charges par mois en $</Label>
                     <Input
-                      defaultValue={listing?.hoa}
+                      // defaultValue={listing?.hoa}
                       min={0}
                       type="number"
                       id="hoa"
                       name="hoa"
                       placeholder="Charges par mois en $"
                       onChange={handleChange}
+                      value={values.hoa}
+                      onBlur={handleBlur}
                     />
                   </div>
                 </div>
@@ -334,13 +385,14 @@ function EditListing({ params }) {
                 <div className="grid w-full gap-1.5">
                   <Label htmlFor="description">Description</Label>
                   <Textarea
-                    defaultValue={listing?.description}
+                    // defaultValue={listing?.description}
                     placeholder="Ecrivez votre message ici "
                     id="description"
                     rows="7"
-                    required
                     name="description"
                     onChange={handleChange}
+                    value={values.description}
+                    onBlur={handleBlur}
                   />
                 </div>
               </div>
@@ -355,7 +407,7 @@ function EditListing({ params }) {
               </div>
 
               <div className="mt-10 flex flex-col gap-7 md:flex-row  md:justify-end ">
-                <Button
+                {/* <Button
                   type="submit"
                   // disabled={isSubmitting}
                   disabled={loading}
@@ -363,7 +415,7 @@ function EditListing({ params }) {
                   className="text-primary border-primary"
                 >
                   Sauvegarder
-                </Button>
+                </Button> */}
 
                 <Button
                   type="submit"

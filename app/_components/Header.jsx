@@ -88,7 +88,7 @@ function Header() {
               </Button>
             </Link>
           )}
-          <Menu className="" />
+          <Menu />
         </div>
       </div>
       {/* BIGGER SCREENS */}

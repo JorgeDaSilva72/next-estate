@@ -71,25 +71,31 @@ function ListingMapView({ type }) {
   };
 
   return (
-    <div className="p-10 gap-8">
-      <div className="grid grid-cols-1 md:grid-cols-2 ">
-        <div className="">
-          <Listing
-            listing={listing}
-            handleSearchClick={handleSearchClick}
-            searchedAddress={(v) => setSearchedAddress(v)}
-            setBedcount={setBedCount}
-            setBathcount={setBathCount}
-            setParkingcount={setParkingCount}
-            setHomeType={setHomeType}
-            setCoordinates={setCoordinates}
-          />
-        </div>
-        {/* <div className="fixed right-10 h-full md:w-[350px] lg:w-[450px] xl:w-[650px]">
+    <>
+      <p className="font-bold text-2xl text-center ">
+        {type == "Sell" ? "A ACHETER" : "A LOUER"}
+      </p>
+
+      <div className="p-10 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 ">
+          <div className="">
+            <Listing
+              listing={listing}
+              handleSearchClick={handleSearchClick}
+              searchedAddress={(v) => setSearchedAddress(v)}
+              setBedcount={setBedCount}
+              setBathcount={setBathCount}
+              setParkingcount={setParkingCount}
+              setHomeType={setHomeType}
+              setCoordinates={setCoordinates}
+            />
+          </div>
+          {/* <div className="fixed right-10 h-full md:w-[350px] lg:w-[450px] xl:w-[650px]">
           <GoogleMapSection coordinates={coordinates} />
         </div> */}
+        </div>
       </div>
-    </div>
+    </>
   );
 }
 export default ListingMapView;

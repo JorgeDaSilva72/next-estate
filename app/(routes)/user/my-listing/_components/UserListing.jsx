@@ -35,7 +35,9 @@ function UserListing() {
 
   return (
     <div>
-      <h2 className="font-bold text-2xl text-center">Gérer vos annonces</h2>
+      <h2 className="font-bold text-2xl text-center my-4">
+        GERER VOS ANNONCES
+      </h2>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {listing.length > 0
